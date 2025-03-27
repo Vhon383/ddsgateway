@@ -81,6 +81,14 @@ class Handler extends ExceptionHandler
         if ($exception instanceof AuthenticationException) {
             return $this->errorResponse($exception->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
+        
+        if ($exception instanceof ClientException) {
+            $message = $exception->getResponse()->getBody();
+            $code = $exception->getCode();
+            
+            return $this->errorMessage($message, 200);
+        }
+        
 
         if (env('APP_DEBUG', false)) {
             return parent::render($request, $exception);
